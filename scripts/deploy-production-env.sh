@@ -11,7 +11,6 @@ fi
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/high-availability-1.21+.yaml
 
 # add env variables to the cluster
-# production env vars
 kubectl create secret generic production-env-vars --from-env-file=../.env.production --dry-run=client -o yaml | kubectl apply -f - 
 kubectl apply -f ../resources/production-env.yaml
 # wait for the deployment to be ready

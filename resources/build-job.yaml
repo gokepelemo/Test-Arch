@@ -50,7 +50,7 @@ data:
     cd /var/www
 
     # Clone the repository
-    if ! git clone https://github.com/gokepelemo/biensperience.git -vvv; then
+    if ! git clone ${CODE_REPOSITORY} -vvv; then
       echo "Failed to clone repository"
       exit 1
     fi
@@ -65,7 +65,7 @@ data:
     fi
 
     # Install dependencies and build the project
-    if ! npm ci --verbose; then
+    if ! npm install --verbose; then
       echo "npm update failed"
       exit 1
     fi

@@ -55,7 +55,7 @@ data:
     cd /var/www
 
     # Clone the repository
-    if ! git clone https://github.com/gokepelemo/biensperience.git -vvv; then
+    if ! git clone ${CODE_REPOSITORY} -vvv; then
       echo "Failed to clone repository"
       exit 1
     fi
@@ -88,6 +88,8 @@ data:
     fi
 
     # Upload the built artifact to DO Spaces
+    echo "Uploading to DO Spaces..."
+    echo "Build bucket name: ${BUILD_BUCKET_NAME}"
     if ! s3cmd put ${APP_NAME}-latest.tar.gz s3://${BUILD_BUCKET_NAME}/${APP_NAME}-latest.tar.gz --access_key=${BUILD_ACCESS_KEY_ID} --secret_key=${BUILD_SECRET_ACCESS_KEY} --host=${BUILD_S3_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_S3_ENDPOINT} --signature-v2; then
       echo "Failed to upload tar.gz file to DO Spaces"
       exit 1

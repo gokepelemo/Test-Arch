@@ -11,7 +11,7 @@ RUN npm install
 RUN npm run build
 
 # Run the application
-CMD ["pm2-runtime", "start", "server.js", "--name", "${APP_NAME}"]
+CMD ["pm2", "start", "server.js", "--name", "${APP_NAME}"]
 
 # Expose the port the app runs on
 EXPOSE 3001
