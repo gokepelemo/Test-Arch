@@ -72,24 +72,13 @@ data:
 
     # Install dependencies and build the project
     cd ${APP_NAME}
-    npm ci --verbose
-    if [ $? -ne 0 ]; then
-      echo "Failed to update dependencies"
-      exit 1
-    fi
-    # Build the project
-    npm run build --verbose
-    if [ $? -ne 0 ]; then
-      echo "Failed to build the project"
-      exit 1
-    fi
 
     # Start the application using pm2
-    pm2-runtime ps
-    pm2-runtime reload ${APP_NAME} --update-env
+    pm2 list
+    pm2 start server.js --env production --name ${APP_NAME}
 
     # Keep the container running
-    pm2-runtime logs
+    pm2 logs
 ---
 kind: Service
 apiVersion: v1
