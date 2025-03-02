@@ -1,0 +1,104 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-arch-build
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-arch-build
+  template:
+    metadata:
+      labels:
+        app: test-arch-build
+    spec:
+      containers:
+      - name: biensperience-build
+        image: node:20.15.1-alpine
+        command: ["/bin/sh", "-c", "mkdir /var/www && cp /var/scripts/build.sh /var/www/build.sh && chmod +x /var/www/build.sh && /var/www/build.sh"]
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - name: build
+          mountPath: /var/scripts/build.sh
+          subPath: build.sh
+        envFrom:
+        - secretRef:
+            name: build-env-vars
+      volumes:
+      - name: build
+        configMap:
+          name: build-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: build-config
+data:
+  build.sh: |
+    #!/bin/sh
+    set -e  # Exit immediately if a command exits with a non-zero status
+
+    # Add git to the image
+    apk add --no-cache git npm s3cmd
+
+    # Change to the /var/www directory
+    cd /var/www
+
+    # Clone the repository
+    if ! git clone https://github.com/gokepelemo/biensperience.git -vvv; then
+      echo "Failed to clone repository"
+      exit 1
+    fi
+
+    # Change to the working directory
+    cd ${APP_NAME}
+   
+    # Checkout the main branch
+    if ! git checkout main; then
+      echo "Failed to checkout main branch"
+      exit 1
+    fi
+
+    # Install dependencies and build the project
+    if ! npm ci --verbose; then
+      echo "npm update failed"
+      exit 1
+    fi
+
+    if ! npm run build --verbose; then
+      echo "npm run build failed"
+      exit 1
+    fi
+
+    cd ..
+    # Create the tar.gz file
+    if ! tar -czf ${APP_NAME}-latest.tar.gz biensperience; then
+      echo "Failed to create tar.gz file"
+      exit 1
+    fi
+
+    # Upload the tar.gz file to DO Spaces
+    if ! s3cmd put ${APP_NAME}-latest.tar.gz s3://${BUILD_BUCKET_NAME}/${APP_NAME}-latest.tar.gz --access_key=${BUILD_ACCESS_KEY_ID} --secret_key=${BUILD_SECRET_ACCESS_KEY} --host=${BUILD_S3_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_S3_ENDPOINT} --signature-v2; then
+      echo "Failed to upload tar.gz file to DO Spaces"
+      exit 1
+    fi
+
+    # Set the ACL to private
+    if ! s3cmd setacl s3://${BUILD_BUCKET_NAME}/${APP_NAME}-latest.tar.gz --acl-private --access_key=${BUILD_ACCESS_KEY_ID} --secret_key=${BUILD_SECRET_ACCESS_KEY} --host=${BUILD_S3_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_S3_ENDPOINT} --signature-v2; then
+      echo "Failed to set ACL to private"
+      exit 1
+    fi
+
+    # Clean up
+    rm -rf ${APP_NAME}-latest.tar.gz biensperience
+    echo "Build and upload completed successfully"

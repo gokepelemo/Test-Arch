@@ -1,0 +1,141 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-arch
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-arch
+  template:
+    metadata:
+      labels:
+        app: test-arch
+    spec:
+      containers:
+      - name: biensperience
+        # image: node:20.15.1-alpine
+        image: registry.digitalocean.com/test-arch/biensperience:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh", "-c", "cp /var/scripts/startup-script.sh /var/www/startup-script.sh && chmod +x /var/www/startup-script.sh && /var/www/startup-script.sh"]
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - name: startup-script
+          mountPath: /var/scripts/startup-script.sh
+          subPath: startup-script.sh
+        envFrom:
+        - secretRef:
+            name: production-env-vars
+      volumes:
+      - name: startup-script
+        configMap:
+          name: startup-script-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: startup-script-config
+data:
+  startup-script.sh: |
+    #!/bin/sh
+    set -e  # Exit immediately if a command exits with a non-zero status
+
+    # Change to the /var/www directory
+    cd /var/www
+
+    # Get the latest build artifact from DO Spaces
+    s3cmd get s3://${BUILD_BUCKET_NAME}/${APP_NAME}-latest.tar.gz . --access_key=${BUILD_ACCESS_KEY_ID} --secret_key=${BUILD_SECRET_ACCESS_KEY} --host=${BUILD_S3_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_S3_ENDPOINT}
+    if [ $? -ne 0 ]; then
+      echo "Failed to download the build artifacts from DO Spaces"
+      exit 1
+    fi
+
+    # Extract the build artifacts
+    tar -xzf ${APP_NAME}-latest.tar.gz -C . --overwrite
+    if [ $? -ne 0 ]; then
+      echo "Failed to extract the build artifacts"
+      exit 1
+    fi
+
+    # Remove the tar file
+    rm ${APP_NAME}-latest.tar.gz
+
+    # Install dependencies and build the project
+    cd ${APP_NAME}
+    npm ci --verbose
+    if [ $? -ne 0 ]; then
+      echo "Failed to update dependencies"
+      exit 1
+    fi
+    # Build the project
+    npm run build --verbose
+    if [ $? -ne 0 ]; then
+      echo "Failed to build the project"
+      exit 1
+    fi
+
+    # Start the application using pm2
+    pm2-runtime ps
+    pm2-runtime reload ${APP_NAME} --update-env
+
+    # Keep the container running
+    pm2-runtime logs
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: test-arch-lb
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-enable-backend-keepalive: "true"
+spec:
+  type: LoadBalancer
+  selector:
+    app: test-arch
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 3001      
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: test-arch
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: test-arch
+  minReplicas: 2
+  maxReplicas: 5
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 120
+      selectPolicy: Max
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80
