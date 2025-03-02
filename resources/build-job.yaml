@@ -83,13 +83,13 @@ data:
     fi
 
     # Upload the built artifact to DO Spaces
-    if ! s3cmd put ${APP_NAME}-latest.tar.gz s3://${BUILD_BUCKET_NAME}/${APP_NAME}-latest.tar.gz --access_key=${BUILD_ACCESS_KEY_ID} --secret_key=${BUILD_SECRET_ACCESS_KEY} --host=${BUILD_S3_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_S3_ENDPOINT} --signature-v2; then
+    if ! s3cmd put ${APP_NAME}-latest.tar.gz s3://${BUILD_BUCKET_NAME}/${APP_NAME}-latest.tar.gz --access_key=${BUILD_ACCESS_KEY_ID} --secret_key=${BUILD_SECRET_ACCESS_KEY} --host=${BUILD_SPACES_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_SPACES_ENDPOINT} --signature-v2; then
       echo "Failed to upload tar.gz file to DO Spaces"
       exit 1
     fi
 
     # Set the ACL to private
-    if ! s3cmd setacl s3://${BUILD_BUCKET_NAME}/${APP_NAME}-latest.tar.gz --acl-private --access_key=${BUILD_ACCESS_KEY_ID} --secret_key=${BUILD_SECRET_ACCESS_KEY} --host=${BUILD_S3_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_S3_ENDPOINT} --signature-v2; then
+    if ! s3cmd setacl s3://${BUILD_BUCKET_NAME}/${APP_NAME}-latest.tar.gz --acl-private --access_key=${BUILD_ACCESS_KEY_ID} --secret_key=${BUILD_SECRET_ACCESS_KEY} --host=${BUILD_SPACES_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_SPACES_ENDPOINT} --signature-v2; then
       echo "Failed to set ACL to private"
       exit 1
     fi

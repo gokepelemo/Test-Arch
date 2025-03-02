@@ -14,7 +14,7 @@ spec:
         app: test-arch
     spec:
       containers:
-      - name: biensperience
+      - name: production-app
         # image: node:20.15.1-alpine
         image: registry.digitalocean.com/test-arch/biensperience:latest
         imagePullPolicy: IfNotPresent
@@ -66,7 +66,7 @@ data:
     cd /var/www
 
     # Get the latest build artifact from DO Spaces
-    s3cmd get s3://${BUILD_BUCKET_NAME}/${APP_NAME}-latest.tar.gz . --access_key=${BUILD_ACCESS_KEY_ID} --secret_key=${BUILD_SECRET_ACCESS_KEY} --host=${BUILD_S3_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_S3_ENDPOINT}
+    s3cmd get s3://${BUILD_BUCKET_NAME}/${APP_NAME}-latest.tar.gz . --access_key=${BUILD_ACCESS_KEY_ID} --secret_key=${BUILD_SECRET_ACCESS_KEY} --host=${BUILD_SPACES_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_SPACES_ENDPOINT}
     if [ $? -ne 0 ]; then
       echo "Failed to download the build artifacts from DO Spaces"
       exit 1

@@ -8,14 +8,14 @@ if [ -z "$BUILD_ACCESS_KEY_ID" ]; then
     echo "BUILD_ACCESS_KEY_ID is not set."
     read -p "Enter the Spaces access key: " BUILD_ACCESS_KEY_ID
     export BUILD_ACCESS_KEY_ID
-    if ! grep "BUILD_ACCESS_KEY_ID" ../.env.build; then
+    if ! grep -q "^BUILD_ACCESS_KEY_ID=" ../.env.build; then
         echo "BUILD_ACCESS_KEY_ID=${BUILD_ACCESS_KEY_ID}" >> ../.env.build
 fi
 if [ -z "$BUILD_SECRET_ACCESS_KEY" ]; then
     echo "BUILD_SECRET_ACCESS_KEY is not set."
     read -p "Enter the Spaces secret key: " BUILD_SECRET_ACCESS_KEY
     export BUILD_SECRET_ACCESS_KEY
-    if ! grep "BUILD_SECRET_ACCESS_KEY" ../.env.build; then
+    if ! grep -q "^BUILD_SECRET_ACCESS_KEY=" ../.env.build; then
         echo "BUILD_SECRET_ACCESS_KEY=${BUILD_SECRET_ACCESS_KEY}" >> ../.env.build
 fi
 if ! s3cmd --version > /dev/null 2>&1; then
@@ -23,7 +23,7 @@ if ! s3cmd --version > /dev/null 2>&1; then
     exit 1
 fi
 if ! s3cmd ls s3://${BUILD_BUCKET_NAME} > /dev/null 2>&1; then
-    echo "Creating bucket ${BUILD_BUCKET_NAME}-build..."
-    s3cmd mb s3://${BUILD_BUCKET_NAME} --host=${BUILD_S3_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_S3_ENDPOINT} --signature-v2
-    s3cmd setacl s3://${BUILD_BUCKET_NAME}/ --acl-private --host=${BUILD_S3_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_S3_ENDPOINT} --signature-v2
+    echo "Creating bucket ${BUILD_BUCKET_NAME}..."
+    s3cmd mb s3://${BUILD_BUCKET_NAME} --host=${BUILD_SPACES_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_SPACES_ENDPOINT} --signature-v2
+    s3cmd setacl s3://${BUILD_BUCKET_NAME}/ --acl-private --host=${BUILD_SPACES_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_SPACES_ENDPOINT} --signature-v2
 fi
