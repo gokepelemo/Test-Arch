@@ -22,7 +22,7 @@ A `env.example` file has been added to the repository for your convenience. This
   - `BUILD_SPACES_ENDPOINT`: Endpoint of the DO Spaces bucket.
   - `CODE_REPOSITORY`: Full URL of the git repository where the application codebase is hosted.
 
-If using Github Workflows, add CLUSTER_NAME and APP_NAME as Github repository secrets as well as:
+If using Github Workflows, add `CLUSTER_NAME` and `APP_NAME` as Github repository secrets as well as:
   - `CONTAINER_REGISTRY`: DigitalOcean container registry hostname.
   - `CONTAINER_REGISTRY_NAME`: Name of the DigitalOcean container registry containing the built container image.
   - `DIGITALOCEAN_ACCESS_TOKEN`: API access token for the DigitalOcean account where infrastructure will be created.
