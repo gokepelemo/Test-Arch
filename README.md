@@ -18,7 +18,7 @@ A `env.example` file has been added to the repository for your convenience. This
   - BUILD_ACCESS_KEY_ID: Access key ID of the DO Spaces bucket. Can be generated [here](https://cloud.digitalocean.com/spaces/access_keys).
   - BUILD_SECRET_ACCESS_KEY: Secret access key of the DO Spaces bucket. Can be generated [here](https://cloud.digitalocean.com/spaces/access_keys).
   - BUILD_SPACES_ENDPOINT: Endpoint of the DO Spaces bucket.
-  - CODE_REPOSITORY: Full URL of the repository where the application code is deployed to.
+  - CODE_REPOSITORY: Full URL of the git repository where the application codebase is hosted.
 
 #### Steps to Setup
 1. Clone this repository
