@@ -30,7 +30,7 @@ If using Github Workflows, add `CLUSTER_NAME` and `APP_NAME` as Github repositor
 #### Steps to Setup
 
 1. Clone this repository
-2. Install and auth `doctl` and `kubectl`
+2. Install and auth `doctl`, `s3cmd` and `kubectl`
 3. Create a Spaces bucket for application builds
 4. Create Spaces access keys and run the `create-spaces-bucket.sh` script
 5. Update `.env.build` and `.env.production` files with the appropriate environment variables
