@@ -14,14 +14,8 @@ jobs:
     env:
       CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
       APP_NAME: ${{ secrets.APP_NAME }}
-      APP_ENV: build
-      BUILD_BUCKET_NAME: ${{ secrets.BUILD_BUCKET_NAME }}
-      BUILD_ACCESS_KEY_ID: ${{ secrets.BUILD_ACCESS_KEY_ID }}
-      BUILD_SECRET_ACCESS_KEY: ${{ secrets.BUILD_SECRET_ACCESS_KEY }}
-      BUILD_SPACES_ENDPOINT: ${{ secrets.BUILD_SPACES_ENDPOINT }}
-      CODE_REPOSITORY: ${{ secrets.CODE_REPOSITORY }}
       CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
-      CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+      CONTAINER_REGISTRY_NAME: ${{ secrets.CONTAINER_REGISTRY_NAME }}
       DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
     steps:
@@ -44,8 +38,8 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t ${{ secrets.CONTAINER_REGISTRY }}/${{ secrets.CONTAINER_REGISTRY_USERNAME }}/biensperience:latest .
-        docker push ${{ secrets.CONTAINER_REGISTRY }}/${{ secrets.CONTAINER_REGISTRY_USERNAME }}/biensperience:latest
+        docker build -t ${{ secrets.CONTAINER_REGISTRY }}/${{ secrets.CONTAINER_REGISTRY_NAME }}/{{ secrets.APP_NAME }}:latest .
+        docker push ${{ secrets.CONTAINER_REGISTRY }}/${{ secrets.CONTAINER_REGISTRY_NAME }}/{{ secrets.APP_NAME }}:latest
 
     - name: Set up kubectl
       uses: azure/setup-kubectl@v1

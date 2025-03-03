@@ -19,6 +19,10 @@ A `env.example` file has been added to the repository for your convenience. This
   - BUILD_SECRET_ACCESS_KEY: Secret access key of the DO Spaces bucket. Can be generated [here](https://cloud.digitalocean.com/spaces/access_keys).
   - BUILD_SPACES_ENDPOINT: Endpoint of the DO Spaces bucket.
   - CODE_REPOSITORY: Full URL of the git repository where the application codebase is hosted.
+If using Github Workflows, add CLUSTER_NAME and APP_NAME as Github repository secrets as well as:
+  - CONTAINER_REGISTRY: Container registry hostname.
+  - CONTAINER_REGISTRY_NAME: Name of the container registry containing the built container image.
+  - DIGITALOCEAN_ACCESS_TOKEN: Access token for the DigitalOcean account where infrastructure will be created.
 
 #### Steps to Setup
 1. Clone this repository
@@ -32,6 +36,7 @@ A `env.example` file has been added to the repository for your convenience. This
 7. If the `CODE_REPOSITORY` is already set, run the `run-build-job.sh` script
 8. Run the `deploy-production-env.sh` script
 
+To use Github Workflows instead of shell scripts, add 
 ### Features
 - Scalability
   - Implements the DOKS cluster autoscaling feature to add new nodes to the k8s cluster if it runs out of capacity. This can be updated on any of the deployment scripts.
