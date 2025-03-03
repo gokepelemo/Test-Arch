@@ -1,4 +1,9 @@
 #!/usr/bin/env sh
+# Source the .env.build file
+set -a
+. ../.env.build
+set +a
+
 # create a kubernetes cluster with a node pool and set up environment variables
 if ! doctl kubernetes cluster list | grep "$CLUSTER_NAME"; then
     echo "Creating a kubernetes cluster..."
@@ -8,7 +13,7 @@ else
 fi
 
 # create a build environment for the app
-export KUBE_CONTEXT=$(kubectl config get-contexts --no-headers=true --output=name | grep $CLUSTER_NAME)
+export KUBE_CONTEXT=$(kubectl config get-contexts --no-headers=true --output=name | grep "$CLUSTER_NAME")
 kubectl config use-context $KUBE_CONTEXT
 
 # add .env file to the cluster

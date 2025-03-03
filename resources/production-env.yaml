@@ -27,7 +27,7 @@ spec:
             memory: "256Mi"
             cpu: "250m"
         ports:
-        - containerPort: 80
+        - containerPort: 3001
           protocol: TCP
         volumeMounts:
         - name: startup-script
@@ -65,7 +65,16 @@ data:
     # Change to the /var/www directory
     cd /var/www
 
+    # Make sure pm2 is installed globally
+    if ! command -v pm2 &> /dev/null; then
+      echo "pm2 could not be found, installing..."
+      npm install -g pm2
+    fi
+
     # Get the latest build artifact from DO Spaces
+    echo "Build bucket name: ${BUILD_BUCKET_NAME}"
+    echo "Build app name: ${APP_NAME}"
+    echo "Build spaces endpoint: ${BUILD_SPACES_ENDPOINT}"
     s3cmd get s3://${BUILD_BUCKET_NAME}/${APP_NAME}-latest.tar.gz . --access_key=${BUILD_ACCESS_KEY_ID} --secret_key=${BUILD_SECRET_ACCESS_KEY} --host=${BUILD_SPACES_ENDPOINT} --host-bucket=${BUILD_BUCKET_NAME}.${BUILD_SPACES_ENDPOINT}
     if [ $? -ne 0 ]; then
       echo "Failed to download the build artifacts from DO Spaces"

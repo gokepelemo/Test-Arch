@@ -1,4 +1,10 @@
 #!/usr/bin/env sh
+
+# Source the .env.production file
+set -a
+. ../.env.production
+set +a
+
 # check for or create a kubernetes cluster for this application
 if ! doctl kubernetes cluster list | grep "$CLUSTER_NAME"; then
     echo "Creating a kubernetes cluster..."
@@ -8,7 +14,7 @@ else
 fi
 
 # set context to the cluster
-export KUBE_CONTEXT=$(kubectl config get-contexts --no-headers=true --output=name | grep $CLUSTER_NAME)
+export KUBE_CONTEXT=$(kubectl config get-contexts --no-headers=true --output=name | grep "$CLUSTER_NAME")
 kubectl config use-context $KUBE_CONTEXT
 
 # set up metrics-server for horizontal pod autoscaling

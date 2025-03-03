@@ -1,4 +1,9 @@
 #!/usr/bin/env sh
+# Source the .env.build file
+set -a
+. ../.env.build
+set +a
+
 # Create a DigitalOcean Spaces bucket and set up environment variables
 if [ -z "$BUILD_BUCKET_NAME" ]; then
     export BUILD_BUCKET_NAME="${APP_NAME}-build"
