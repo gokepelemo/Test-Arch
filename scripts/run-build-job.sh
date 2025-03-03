@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+
 # Source the .env.build file
 set -a
 . ../.env.build
