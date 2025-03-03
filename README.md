@@ -20,7 +20,7 @@ A `env.example` file has been added to the repository for your convenience. This
   - `BUILD_SPACES_ENDPOINT`: Endpoint of the DO Spaces bucket.
   - `CODE_REPOSITORY`: Full URL of the git repository where the application codebase is hosted.
 
-If using Github Workflows, add CLUSTER_NAME and APP_NAME as Github repository secrets as well as:
+If using Github Workflows, and rename the `github` directory to `.github`. Add CLUSTER_NAME and APP_NAME as Github repository secrets as well as:
   - `CONTAINER_REGISTRY`: DigitalOcean container registry hostname.
   - `CONTAINER_REGISTRY_NAME`: Name of the DigitalOcean container registry containing the built container image.
   - `DIGITALOCEAN_ACCESS_TOKEN`: API access token for the DigitalOcean account where infrastructure will be created.
@@ -30,7 +30,7 @@ If using Github Workflows, add CLUSTER_NAME and APP_NAME as Github repository se
 2. Install and auth `doctl` and `kubectl`
 3. Create a Spaces bucket for application builds
 4. Create Spaces access keys and run the `create-spaces-bucket.sh` script
-5. Update `.env.build` and `.env.production` with the appropriate environment variables
+5. Update `.env.build` and `.env.production` files with the appropriate environment variables
 6. Update the Kubernetes manifests in the `resources` directory
   - `spec.containers.name`: Name of the application
   - `spec.containers.image`: Image of the application (proof-of-concept is built with `node:20.15.1-alpine`)
