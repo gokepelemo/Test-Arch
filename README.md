@@ -1,7 +1,9 @@
 ### Scalable environments for deploying a highly available Node.js application on DOKS.
+
 This is a proof-of-concept architecture for a Node.js application on DigitalOcean's Kubernetes Service. It features best practices for scalability, great performance, and cost efficiency. It makes use of other DigitalOcean products like Spaces (Object Storage) and the Container Registry.
 
 ### Requirements
+
 - doctl version 1.122+
 - kubectl version 1.32.2+
 - s3cmd version 2.4.0
@@ -20,12 +22,13 @@ A `env.example` file has been added to the repository for your convenience. This
   - `BUILD_SPACES_ENDPOINT`: Endpoint of the DO Spaces bucket.
   - `CODE_REPOSITORY`: Full URL of the git repository where the application codebase is hosted.
 
-If using Github Workflows, and rename the `github` directory to `.github`. Add CLUSTER_NAME and APP_NAME as Github repository secrets as well as:
+If using Github Workflows, add CLUSTER_NAME and APP_NAME as Github repository secrets as well as:
   - `CONTAINER_REGISTRY`: DigitalOcean container registry hostname.
   - `CONTAINER_REGISTRY_NAME`: Name of the DigitalOcean container registry containing the built container image.
   - `DIGITALOCEAN_ACCESS_TOKEN`: API access token for the DigitalOcean account where infrastructure will be created.
 
 #### Steps to Setup
+
 1. Clone this repository
 2. Install and auth `doctl` and `kubectl`
 3. Create a Spaces bucket for application builds
@@ -37,7 +40,8 @@ If using Github Workflows, and rename the `github` directory to `.github`. Add C
 7. If the `CODE_REPOSITORY` is already set, run the `run-build-job.sh` script
 8. Run the `deploy-production-env.sh` script
 
-To use Github Workflows instead of shell scripts, add 
+To use Github Workflows instead of shell scripts, rename the `github` directory to `.github`.
+
 ### Features
 - *Scalability*
   - Implements the DOKS cluster autoscaling feature to add new nodes to the k8s cluster if it runs out of capacity. This can be updated on any of the deployment scripts.
