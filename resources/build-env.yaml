@@ -102,6 +102,6 @@ data:
     fi
 
     # Clean up
-    rm -rf ${APP_NAME}-latest.tar.gz biensperience
+    rm -rf ${APP_NAME}-latest.tar.gz ${APP_NAME}
     echo "Build and upload completed successfully"
     tail -f /dev/null

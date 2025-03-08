@@ -10,7 +10,7 @@ spec:
         app: test-arch-build
     spec:
       containers:
-      - name: biensperience-build
+      - name: app-build
         image: node:20.15.1-alpine
         command: ["/bin/sh", "-c", "mkdir /var/www && cp /var/scripts/build.sh /var/www/build.sh && chmod +x /var/www/build.sh && /var/www/build.sh"]
         resources:
@@ -99,5 +99,5 @@ data:
     fi
 
     # Clean up
-    rm -rf ${APP_NAME}-latest.tar.gz biensperience
+    rm -rf ${APP_NAME}-latest.tar.gz ${APP_NAME}
     echo "Build and upload completed successfully"
