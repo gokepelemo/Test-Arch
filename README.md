@@ -35,8 +35,8 @@ If using Github Workflows, add `CLUSTER_NAME` and `APP_NAME` as Github repositor
 4. Create Spaces access keys and run the `create-spaces-bucket.sh` script
 5. Update `.env.build` and `.env.production` files with the appropriate environment variables
 6. Update the Kubernetes manifests in the `resources` directory
-  - `spec.containers.name`: Name of the application
-  - `spec.containers.image`: Image of the application (proof-of-concept is built with `node:20.15.1-alpine`)
+    - `spec.containers.name`: Name of the application
+    - `spec.containers.image`: Image of the application (proof-of-concept is built with `node:20.15.1-alpine`)
 7. If the `CODE_REPOSITORY` is already set, run the `run-build-job.sh` script
 8. Run the `deploy-production-env.sh` script
 
