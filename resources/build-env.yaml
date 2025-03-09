@@ -82,7 +82,7 @@ data:
 
     cd ..
     # Create the tar.gz file
-    if ! tar -czf ${APP_NAME}-latest.tar.gz biensperience; then
+    if ! tar -czf ${APP_NAME}-latest.tar.gz ${APP_NAME}; then
       echo "Failed to create tar.gz file"
       exit 1
     fi

@@ -15,8 +15,7 @@ spec:
     spec:
       containers:
       - name: production-app
-        # image: node:20.15.1-alpine
-        image: registry.digitalocean.com/test-arch/biensperience:latest
+        image: node:20.15.1-alpine
         imagePullPolicy: IfNotPresent
         command: ["/bin/sh", "-c", "cp /var/scripts/startup-script.sh /var/www/startup-script.sh && chmod +x /var/www/startup-script.sh && /var/www/startup-script.sh"]
         resources:
