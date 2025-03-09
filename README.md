@@ -6,7 +6,7 @@ This is a proof-of-concept architecture for a Node.js application on DigitalOcea
 
 - doctl version 1.122+
 - kubectl version 1.32.2+
-- s3cmd version 2.4.0
+- s3cmd version 2.4.0+
 
 ### Setup Guide
 
