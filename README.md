@@ -49,7 +49,7 @@ To use Github Workflows instead of shell scripts, rename the `github` directory 
 - *Performance*
   - Static files uploaded in the application are hosted on object storage, and a full proxy CDN can be implemented to improve network-level performance, ensuring that only API requests are processed by the application pods. 
   - Database is a managed service hosted on your choice of external database provider.
-  - Config for external services are stored in .env.{build/production} environment variables through Kubernetes secrets.
+  - Config for external services are stored in .env.{build|production} environment variables through Kubernetes secrets.
 - *Reliability*
   - Implements the DO load balancer, which is highly available by default. 
   - Application is also highly available by default, as two application pods are created on each deployment.
