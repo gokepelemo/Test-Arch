@@ -45,7 +45,7 @@ To use Github Workflows instead of shell scripts, rename the `github` directory 
 ### Features
 - *Scalability*
   - Implements the DOKS cluster autoscaling feature to add new nodes to the k8s cluster if it runs out of capacity. This can be updated on any of the deployment scripts.
-  - Implements horizontal pod autoscaling, scaling up reasonably when average load increases on the application pods, and scaling down when loads reduces. These can be fine-tuned in the Kubernetes manifests.
+  - Implements horizontal pod autoscaling, scaling up reasonably when average load increases on the application pods, and scaling down when load reduces. These can be fine-tuned in the Kubernetes manifests.
 - *Performance*
   - Static files uploaded in the application are hosted on object storage, and a full proxy CDN can be implemented to improve network-level performance, ensuring that only API requests are processed by the application pods. 
   - Database is a managed service hosted on your choice of external database provider.
